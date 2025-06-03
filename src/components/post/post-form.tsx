@@ -50,7 +50,9 @@ const PostForm = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-center mb-8">Create New Post</h2>
+      <h2 className="text-2xl font-bold text-center mb-8">
+        What&apos;s your next gathering?
+      </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
