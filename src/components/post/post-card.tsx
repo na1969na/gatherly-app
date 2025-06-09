@@ -1,4 +1,6 @@
 import { formatDistance, subDays } from "date-fns";
+import { useEffect, useState } from "react";
+import supabase from "@/lib/db/supabaseClient";
 
 type Post = {
   id: string;
@@ -12,11 +14,28 @@ type Post = {
   };
 };
 
-interface PostCardProps {
+type PostCardProps = {
   post: Post;
-}
+};
 
 const PostCard = ({ post }: PostCardProps) => {
+  const [currentParticipants, setCurrentParticipants] = useState(0);
+
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      const { count, error } = await supabase
+        .from("participants")
+        .select("*", { count: "exact", head: true })
+        .eq("post_id", post.id);
+
+      if (!error && count !== null) {
+        setCurrentParticipants(count);
+      }
+    };
+
+    fetchParticipants();
+  }, [post.id]);
+
   const timeAgo = (timestamp: string) => {
     const timeAgo = formatDistance(
       subDays(new Date(), 3),
@@ -29,7 +48,7 @@ const PostCard = ({ post }: PostCardProps) => {
   };
 
   return (
-    <div className="w-full border-b p-4 cursor-pointer bg-[#f1eff5] hover:bg-[#e8e6eb] transition-colors">
+    <div className="w-full max-w-xl border-b p-4 cursor-pointer hover:bg-gray-50 transition-colors">
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <span className="font-semibold">
@@ -44,7 +63,7 @@ const PostCard = ({ post }: PostCardProps) => {
             <p className="text-gray-600">{post.description}</p>
           )}
           <p className="text-sm text-gray-500 font-semibold">
-            Max Participants: {post.max_participants}
+            {currentParticipants} participants
           </p>
         </div>
       </div>

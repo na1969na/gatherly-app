@@ -3,7 +3,9 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState, useEffect } from "react";
 import supabase from "@/lib/db/supabaseClient";
-
+import PostDetailMap from "./post-detail-map";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 interface PostDetailProps {
   post: Post | null;
 }
@@ -57,7 +59,6 @@ const PostDetail = ({ post }: PostDetailProps) => {
       setMessage("参加に失敗しました。もう一度お試しください。");
     } else {
       setCurrentParticipants((prev) => prev + 1);
-      setMessage("参加が完了しました！");
       setHasJoined(true);
     }
     setIsLoading(false);
@@ -77,7 +78,6 @@ const PostDetail = ({ post }: PostDetailProps) => {
       setMessage("参加の取り消しに失敗しました。もう一度お試しください。");
     } else {
       setCurrentParticipants((prev) => prev - 1);
-      setMessage("参加を取り消しました。");
       setHasJoined(false);
     }
     setIsLoading(false);
@@ -86,8 +86,14 @@ const PostDetail = ({ post }: PostDetailProps) => {
   if (!post) return null;
 
   return (
-    <div className="max-w-xl h-[calc(100vh-100px)] p-6 bg-white rounded-2xl overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4">{post.title}</h2>
+    <div className="w-full max-w-xl h-[calc(100vh-100px)] p-6 border shadow-lg rounded-2xl overflow-y-auto">
+      <div className="flex items-center justify-between mb-8">
+        <Link href="/" className="hover:bg-gray-100 rounded-full p-1">
+          <ArrowLeft className="w-6 h-6 cursor-pointer" />
+        </Link>
+        <h2 className="text-2xl font-bold text-center">{post.title}</h2>
+        <div className="w-6"></div>
+      </div>
       <div className="space-y-4">
         <div>
           <h3 className="text-lg font-semibold mb-2">Description</h3>
@@ -100,30 +106,19 @@ const PostDetail = ({ post }: PostDetailProps) => {
           </p>
         </div>
 
-        {message && (
-          <p
-            className={`text-sm ${
-              message.includes("失敗") ? "text-red-500" : "text-green-500"
-            }`}
-          >
-            {message}
-          </p>
-        )}
-
         <hr />
 
         <div className="flex gap-2">
           <Input
             type="text"
             placeholder="Enter your nearest station"
-            className="flex-1"
             value={station}
             onChange={(e) => setStation(e.target.value)}
             disabled={isLoading || hasJoined}
           />
           {hasJoined ? (
             <Button
-              className="flex-1 rounded-full bg-red-500 hover:bg-red-600"
+              className="rounded-full w-24 bg-black hover:bg-gray-800"
               onClick={handleLeave}
               disabled={isLoading}
             >
@@ -131,13 +126,14 @@ const PostDetail = ({ post }: PostDetailProps) => {
             </Button>
           ) : (
             <Button
-              className="flex-1 rounded-full"
+              className="rounded-full w-24"
               onClick={handleJoin}
               disabled={isLoading || !station.trim()}
             >
               {isLoading ? "Joining..." : "Join"}
             </Button>
           )}
+          {/* <PostDetailMap postId={post.id} /> */}
         </div>
       </div>
     </div>

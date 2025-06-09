@@ -5,7 +5,7 @@ const CreatePostPage = () => {
     <div className="flex justify-center items-center h-[calc(100vh-100px)]">
       <PostForm />
     </div>
-  )
-}
+  );
+};
 
 export default CreatePostPage;

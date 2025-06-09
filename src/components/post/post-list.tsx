@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import supabase from "@/lib/db/supabaseClient";
 import PostCard from "./post-card";
-import PostDetail from "./post-detail";
 import { Post } from "@/types/post";
 
 const PostList = () => {
+  const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,18 +60,15 @@ const PostList = () => {
   }
 
   return (
-    <div className="flex gap-4">
-      <div className="flex-1 rounded-2xl border border-gray-300 h-[calc(100vh-100px)] overflow-hidden max-w-7xl mx-auto">
+    <div className="w-full max-w-xl mx-auto">
+      <div className="rounded-2xl shadow-lg border h-[calc(100vh-100px)] overflow-hidden">
         <div className="h-full overflow-y-auto">
           {posts.map((post) => (
-            <div key={post.id} onClick={() => setSelectedPost(post)}>
+            <div key={post.id} onClick={() => router.push(`/post/${post.id}`)}>
               <PostCard post={post} />
             </div>
           ))}
         </div>
-      </div>
-      <div className="flex-1">
-        <PostDetail post={selectedPost} />
       </div>
     </div>
   );
