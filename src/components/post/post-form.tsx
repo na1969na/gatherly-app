@@ -22,8 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const PostForm = () => {
+  const router = useRouter();
   const form = useForm<PostFormInputs>({
     resolver: zodResolver(postSchema),
     defaultValues: {
@@ -44,7 +46,7 @@ const PostForm = () => {
     if (error) {
       console.error(error);
     } else {
-      alert("Post created successfully!");
+      router.push(`/`);
     }
   };
 

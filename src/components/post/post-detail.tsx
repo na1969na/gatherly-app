@@ -6,13 +6,13 @@ import supabase from "@/lib/db/supabaseClient";
 import PostDetailMap from "./post-detail-map";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner"
 interface PostDetailProps {
   post: Post | null;
 }
 
 const PostDetail = ({ post }: PostDetailProps) => {
   const [station, setStation] = useState("");
-  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentParticipants, setCurrentParticipants] = useState(0);
   const [hasJoined, setHasJoined] = useState(false);
@@ -56,7 +56,7 @@ const PostDetail = ({ post }: PostDetailProps) => {
     });
 
     if (error) {
-      setMessage("参加に失敗しました。もう一度お試しください。");
+      toast.error("Failed to join. Please try again.");
     } else {
       setCurrentParticipants((prev) => prev + 1);
       setHasJoined(true);
@@ -75,7 +75,7 @@ const PostDetail = ({ post }: PostDetailProps) => {
       .eq("station", station);
 
     if (error) {
-      setMessage("参加の取り消しに失敗しました。もう一度お試しください。");
+      toast.error("Failed to leave. Please try again.");
     } else {
       setCurrentParticipants((prev) => prev - 1);
       setHasJoined(false);

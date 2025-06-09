@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import supabase from "@/lib/db/supabaseClient";
 import PostDetail from "@/components/post/post-detail";
 import { Post } from "@/types/post";
+import PostLoading from "@/components/post/post-loading";
 
 const PostDetailPage = () => {
   const params = useParams();
@@ -40,11 +41,7 @@ const PostDetailPage = () => {
   }, [params.id, router]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <p className="text-gray-500">Loading post...</p>
-      </div>
-    );
+    return <PostLoading />;
   }
 
   if (!post) {

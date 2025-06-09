@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import supabase from "@/lib/db/supabaseClient";
 import PostCard from "./post-card";
 import { Post } from "@/types/post";
+import PostLoading from "./post-loading";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { FaSadTear } from "react-icons/fa";
 
 const PostList = () => {
   const router = useRouter();
@@ -36,25 +40,28 @@ const PostList = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <p className="text-gray-500">Loading posts...</p>
-      </div>
-    );
+    return <PostLoading />;
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <p className="text-red-500">Error: {error}</p>
+      <div className="flex flex-col justify-center items-center h-[calc(100vh-150px)] text-2xl gap-4">
+        <FaSadTear className="text-4xl mb-4" />
+        <p className="">Sorry, something went wrong.</p>
+        <p className="">Please try again later.</p>
       </div>
     );
   }
 
   if (posts.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <p className="text-gray-500">No posts found.</p>
+      <div className="flex flex-col justify-center items-center h-[calc(100vh-150px)] gap-8">
+        <p className="text-gray-500 text-2xl font-bold">No posts found.</p>
+        <Link href="/post/new">
+          <Button className="rounded-full px-8 py-5 text-md">
+            Let&apos;s Create Post!
+          </Button>
+        </Link>
       </div>
     );
   }
